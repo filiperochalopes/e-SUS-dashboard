@@ -7,7 +7,7 @@ services:
     ports:
       - "${PGWEB_PORT}:8081"
     environment:
-      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@psql:5432/${POSTGRES_DB}?sslmode=disable
+      - DATABASE_URL=${DATABASE_URL}
     depends_on:
       - psql
   api:
@@ -20,7 +20,7 @@ services:
       - ./api:/app
       - ./api/nginx.conf:/etc/nginx/sites-enabled/default
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@psql:5432/${POSTGRES_DB}?sslmode=disable
+      - DATABASE_URL=${DATABASE_URL}
     stdin_open: true
     ports:
       - "${API_PORT}:80"

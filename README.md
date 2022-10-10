@@ -2,6 +2,12 @@
 
 O Sistema [e-SUS APS PEC](https://sisaps.saude.gov.br/esus/) é composto de uma estrutura complexa de banco de dados contendo colunas defasadas e atuais para retrocompatibilidade, é um probgrama amplamente utilizado na atenção básica ao redor do Brasil, porém pobre em exibição de métricas e análise inteligente dos dados, por isso o desenvolvimento dessa camada dem anipulação de dados para exposição dos mesmos em API com autenticação a fim de cálculo de métricas de desempenho dentre outras utilidades.
 
+## COnfigurando variáveis de ambiente
+
+```bash
+DATABASE_URL='postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@psql:5432/${POSTGRES_DB}?sslmode=disable'
+```
+
 **Daqui para baixo ainda depende de edição**
 
 
