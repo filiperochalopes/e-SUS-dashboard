@@ -26,8 +26,8 @@ def not_found(error):
 from .views import all_views
 app.register_blueprint(all_views, url_prefix="/api/v1")
 
-from .graphql import query, type_defs, resolvers
-schema = make_executable_schema(type_defs, query)
+from .graphql import query, type_defs, mutation
+schema = make_executable_schema(type_defs, [query, mutation])
 
 @app.route("/api/v1/graphql", methods=["GET"])
 def graphql_playground():
