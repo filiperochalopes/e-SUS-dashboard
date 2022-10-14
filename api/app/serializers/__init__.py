@@ -1,10 +1,10 @@
-from pyexpat import model
-from app import ma
+from flask_marshmallow import Marshmallow
 from app.models.Medicamento import Medicamento, Receita, ViaAdministracao, FormaFarmaceutica, UnidadeMedidaTempo, TipoFrequencia
 from app.models.Atendimento import Atendimento, AtendimentoProfissional, Problema
 from app.models.IniciarConsulta import Cid10
 from marshmallow_sqlalchemy import fields
 
+ma = Marshmallow()
 
 class FormaFarmaceuticaSchema(ma.SQLAlchemyAutoSchema):
     class Meta:

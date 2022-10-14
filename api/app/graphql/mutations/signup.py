@@ -19,6 +19,7 @@ def signup(_, info, master_key: str, name: str, email: str, password: str):
     print(info, file=sys.stderr)
 
     return {
+        'masterKey': master_key,
         'name': name,
         'email': email
     }

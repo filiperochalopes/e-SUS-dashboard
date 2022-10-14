@@ -1,4 +1,4 @@
-from app import db
+from . import db
 from sqlalchemy.orm import relationship
 from app.models.IniciarConsulta import Cid10
 
@@ -46,7 +46,8 @@ class Prontuario(db.Model):
 
     __tablename__ = "tb_prontuario"
 
-
+# ? tb_problema_evolucao
+# ? tb_problema
 class Problema(db.Model):
     co_seq_evolucao_aval_ciap_cid = db.Column(db.Integer, primary_key=True)
     co_cid10 = db.Column(db.Integer, db.ForeignKey(

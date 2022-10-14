@@ -1,14 +1,16 @@
+from .views import all_views
+from .graphql import query, type_defs, mutation
 from flask import Flask, render_template, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
+from app.models import db
+from app.serializers import ma
 from flask_assets import Bundle, Environment
 from ariadne.constants import PLAYGROUND_HTML
 from ariadne import graphql_sync, make_executable_schema
 
 app = Flask(__name__)
 app.config.from_object('config')
-db = SQLAlchemy(app)
-ma = Marshmallow(app)
+db.init_app(app)
+ma.init_app(app)
 assets = Environment(app)
 assets.url = app.static_url_path
 
@@ -19,15 +21,16 @@ scss = Bundle(
 )
 assets.register("scss_all", scss)
 
+
 @app.errorhandler(404)
 def not_found(error):
     return render_template('404.html'), 404
 
-from .views import all_views
+
 app.register_blueprint(all_views, url_prefix="/api/v1")
 
-from .graphql import query, type_defs, mutation
 schema = make_executable_schema(type_defs, [query, mutation])
+
 
 @app.route("/api/v1/graphql", methods=["GET"])
 def graphql_playground():
@@ -40,19 +43,28 @@ def graphql_playground():
     # type header to application/graphql
     return PLAYGROUND_HTML
 
-# Create a GraphQL endpoint for executing GraphQL queries
-
 
 @app.route("/api/v1/graphql", methods=["POST"])
 def graphql_server():
+    '''
+    GraphQL endpoint for executing GraphQL queries
+    '''
     data = request.get_json()
     success, result = graphql_sync(
         schema, data, context_value={"request": request})
     status_code = 200 if success else 400
     return jsonify(result), status_code
 
-# Later on you'll import the other blueprints the same way:
-#from app.comments.views import mod as commentsModule
-#from app.posts.views import mod as postsModule
-# app.register_blueprint(commentsModule)
-# app.register_blueprint(postsModule)
+
+'''
+Comandos flask cli
+'''
+
+
+@app.cli.command("seed")
+def seed():
+    """Seed the database."""
+    user_1 = User(username="medico", password="senha@123".encode('utf-8'))
+    db.session.add(user_1)
+    db.session.commit()
+    print(user_1)

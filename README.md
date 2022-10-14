@@ -8,15 +8,53 @@ O Sistema [e-SUS APS PEC](https://sisaps.saude.gov.br/esus/) é composto de uma 
 DATABASE_URL='postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@psql:5432/${POSTGRES_DB}?sslmode=disable'
 ```
 
-### Gerando secret key
+## Gerando secret key
 
 ```sh
 python -c 'import secrets; print(secrets.token_hex())'
 ```
 
+## Reset app
+
+```sh
+make run
+make migrate
+```
+
+## Comandos de migrations
+
+```sh
+make migrate
+make comment="update some table" makemigrations
+```
+
+## Utilizando o alembic no ambiente de desenvolvimento
+
+```sh
+flask db init
+flask db migrate -m "Initial migration"
+flask db upgrade
+```
+
 ## Dicas de navegação no banco de dados do PEC
 
 O banco de dados, na versão `4.2.8` em que essa documentação foi escrita continha 919 tabelas com relacionamentos abundantes e aparente repetição de dados. Não existe uma documentação do banco, porém segue algumas dicas que uso para poder navegar.
+
+### [ Recomendável ] Criando usuário read-only 
+
+Para que seja impossível por meio dessa API editar os dados por acidente, permitindo apenas a leitura por parte da API.
+
+```sql
+-- Criando Role (Função)
+CREATE ROLE readaccess;
+-- Criando grupo de permissões para a Função
+GRANT CONNECT ON DATABASE esus TO readaccess;
+GRANT USAGE ON SCHEMA public TO readaccess;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO readaccess;
+-- Criando o usuário com a Função
+CREATE USER esus_reader WITH PASSWORD 'esus';
+GRANT readaccess TO esus_reader;
+```
 
 ### Verificando mais sobre uma tabela para apromorar API
 
