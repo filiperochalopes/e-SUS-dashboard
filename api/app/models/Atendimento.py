@@ -13,6 +13,8 @@ class AtendimentoProfissional(db.Model):
     '''
     Atendimento profissional é o atendimento feito por um único profissional em um dia de dida à unidade de saúde
     '''
+    __bind_key__ = "esus"
+
     co_seq_atend_prof = db.Column(db.Integer, primary_key=True)
     dt_fim = db.Column(db.DateTime)
     dt_inicio = db.Column(db.DateTime)
@@ -29,6 +31,8 @@ class Atendimento(db.Model):
     '''
     Um atendimento é como uma ida ao posto de saúde, nessa ida podem ser realizadas vários atendimentos profissionais: triagem, vacina...
     '''
+    __bind_key__ = "esus"
+
     co_seq_atend = db.Column(db.Integer, primary_key=True)
     co_prontuario = db.Column(db.Integer)
     st_registro_tardio = db.Column(db.Integer)
@@ -41,6 +45,8 @@ class Prontuario(db.Model):
     '''
     Cada prnotuário pertence a um indivíduo
     '''
+    __bind_key__ = "esus"
+
     co_seq_prontuario = db.Column(db.Integer, primary_key=True)
     co_cidadao = db.Column(db.Integer)
 
@@ -49,6 +55,8 @@ class Prontuario(db.Model):
 # ? tb_problema_evolucao
 # ? tb_problema
 class Problema(db.Model):
+    __bind_key__ = "esus"
+    
     co_seq_evolucao_aval_ciap_cid = db.Column(db.Integer, primary_key=True)
     co_cid10 = db.Column(db.Integer, db.ForeignKey(
         'tb_cid10.co_cid10'), nullable=True)

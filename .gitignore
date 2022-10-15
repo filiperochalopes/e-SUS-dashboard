@@ -5,3 +5,4 @@ __pycache__
 *.backup
 .webassets-cache
 .env
+*.db

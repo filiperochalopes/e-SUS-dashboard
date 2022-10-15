@@ -1,22 +1,31 @@
+# Production
 prod_run:
 	docker-compose -f docker-compose.prod.yml down --remove-orphans --volumes
 	docker-compose down --remove-orphans --volumes
-	sudo chmod -R 777 data
 	docker-compose -f docker-compose.prod.yml up -d
 prod_update:
 	docker-compose -f docker-compose.prod.yml down --remove-orphans --volumes
 	docker-compose down --remove-orphans --volumes
-	sudo chmod -R 777 data
 	docker-compose -f docker-compose.prod.yml up -d --build
-run:
+update:
 	docker-compose down --remove-orphans --volumes
-	sudo chmod -R 777 data
-	docker-compose up -d
+	docker-compose up -d --build
+
+# Development environment
+run:
+	docker-compose up --build
 down:
 	docker-compose down --remove-orphans --volumes
 logs:
 	docker-compose logs -f
-update:
-	docker-compose down
-	sudo chmod -R 777 data
-	docker-compose up -d --build
+seed:
+	docker exec -it esus_dashboard_api bash -c "FLASK_APP=app/__init__.py && \
+	flask seed"
+terminal:
+	docker exec -it esus_dashboard_api bash
+shell:
+	docker exec -it esus_dashboard_api bash -c "flask shell"
+migrate:
+	docker exec -it esus_dashboard_api bash -c "flask db upgrade"
+makemigrations:
+	docker exec -it esus_dashboard_api bash -c 'flask db migrate -m "$(m)"'

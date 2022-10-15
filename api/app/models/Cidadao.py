@@ -1,6 +1,8 @@
 from . import db
 
 class Cidadao(db.Model):
+    __bind_key__ = "esus"
+    
     co_seq_cidadao = db.Column(db.Integer, primary_key=True)
     no_cidadao = db.Column(db.Text)
     nu_cns = db.Column(db.Text)

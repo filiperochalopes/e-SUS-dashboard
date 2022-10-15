@@ -19,6 +19,8 @@ services:
       - ./api/nginx.conf:/etc/nginx/sites-enabled/default
     environment:
       - DATABASE_URL=${DATABASE_URL}
+      - MASTER_KEY=${MASTER_KEY}
+      - SECRET=${SECRET}
     stdin_open: true
     ports:
       - "${API_PORT}:80"

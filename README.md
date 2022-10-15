@@ -25,13 +25,13 @@ make migrate
 
 ```sh
 make migrate
-make comment="update some table" makemigrations
+make m="update some table" makemigrations
 ```
 
 ## Utilizando o alembic no ambiente de desenvolvimento
 
 ```sh
-flask db init
+flask db init --multidb
 flask db migrate -m "Initial migration"
 flask db upgrade
 ```

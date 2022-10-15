@@ -6,6 +6,8 @@ class MedicamentoPrincipioAtivo(db.Model):
     '''
     Tabela de Relacionamento entre o medicamento e princípio ativo
     '''
+    __bind_key__ = "esus"
+
     co_medicamento_catmat = db.Column(db.Integer, primary_key=True)
     co_principio_ativo = db.Column(db.Integer, db.ForeignKey(
         'tb_principio_ativo.co_principio_ativo'), nullable=False)
@@ -21,6 +23,8 @@ class MedicamentoPrincipioAtivo(db.Model):
 
 
 class PrincipioAtivo(db.Model):
+    __bind_key__ = "esus"
+
     co_principio_ativo = db.Column(db.Integer, primary_key=True)
     no_principio_ativo = db.Column(db.Text)
     co_lista_medicamento = db.Column(db.Integer, db.ForeignKey(
@@ -33,6 +37,8 @@ class PrincipioAtivo(db.Model):
 
 
 class Medicamento(db.Model):
+    __bind_key__ = "esus"
+
     co_seq_medicamento = db.Column(db.Integer, primary_key=True)
     no_principio_ativo = db.Column(db.Text)
     ds_concentracao = db.Column(db.Text)
@@ -52,6 +58,8 @@ class Medicamento(db.Model):
 
 
 class TipoReceita(db.Model):
+    __bind_key__ = "esus"
+
     co_tipo_receita = db.Column(db.Integer, primary_key=True)
     no_tipo_receita = db.Column(db.Text)
 
@@ -64,6 +72,8 @@ class ListaMedicamento(db.Model):
     sua classficação quanto a A1 - Entorpecentes a C3 - Imunosupressores
     14 - Comuns, 13 - Antimicrobianos
     '''
+    __bind_key__ = "esus"
+
     co_lista_medicamento = db.Column(db.Integer, primary_key=True)
     no_lista_medicamento = db.Column(db.Text)
     tp_receita = db.Column(db.Integer, db.ForeignKey(
@@ -76,6 +86,8 @@ class ListaMedicamento(db.Model):
 
 
 class FormaFarmaceutica(db.Model):
+    __bind_key__ = "esus"
+
     co_forma_farmaceutica = db.Column(db.Integer, primary_key=True)
     no_forma_farmaceutica = db.Column(db.Text)
     st_ativo = db.Column(db.Boolean)
@@ -84,6 +96,8 @@ class FormaFarmaceutica(db.Model):
 
 
 class ViaAdministracao(db.Model):
+    __bind_key__ = "esus"
+
     co_aplicacao_medicamento = db.Column(db.Integer, primary_key=True)
     no_aplicacao_med_filtro = db.Column(db.Text)
 
@@ -94,6 +108,8 @@ class TipoFrequencia(db.Model):
     '''
     Para verificação do 'nome' da frequencia, se é 1 - TURNO (manhã, tarde, noite), 2 - FREQUENCIA (1x, 2x...) ou 3 - INTERVALO (2/2h, 6/6h, ...)
     '''
+    __bind_key__ = "esus"
+
     co_receita_tipo_frequencia = db.Column(db.Integer, primary_key=True)
     no_identificador = db.Column(db.Text)
 
@@ -104,6 +120,8 @@ class DuracaoTratamentoUnidadeMedida(db.Model):
     '''
     Para verificação do 'nome' da duração de tratamento, se são dias, semanas, meses ou indeterminado
     '''
+    __bind_key__ = "esus"
+
     cod_seq_dim_duracao_trat_med = db.Column(db.Integer, primary_key=True)
     no_duracao_tratamento_med_filt = db.Column(db.Text)
 
@@ -111,6 +129,8 @@ class DuracaoTratamentoUnidadeMedida(db.Model):
 
 
 class Receita(db.Model):
+    __bind_key__ = "esus"
+
     co_seq_receita_medicamento = db.Column(db.Integer, primary_key=True)
     ds_dose = db.Column(db.Text, comment='Dose, ex.: 1 comprimido, 15ml')
 
@@ -166,6 +186,8 @@ class UnidadeMedida(db.Model):
     '''
     Unidade de medida para apresentação do medicamento: ampola, barra, tubo
     '''
+    __bind_key__ = "esus"
+
     co_unidade_medida = db.Column(db.Integer, primary_key=True)
     no_unidade_medida = db.Column(db.Text)
 
@@ -176,6 +198,8 @@ class UnidadeMedidaTempo(db.Model):
     '''
     Unidade de medida de tempo: hora, dia, semana
     '''
+    __bind_key__ = "esus"
+
     co_unidade_medida_tempo = db.Column(db.Integer, primary_key=True)
     no_unidade_medida_tempo = db.Column(db.Text)
 

@@ -3,6 +3,7 @@ from .graphql import query, type_defs, mutation
 from flask import Flask, render_template, request, jsonify
 from app.models import db
 from app.serializers import ma
+from flask_migrate import Migrate
 from flask_assets import Bundle, Environment
 from ariadne.constants import PLAYGROUND_HTML
 from ariadne import graphql_sync, make_executable_schema
@@ -11,6 +12,7 @@ app = Flask(__name__)
 app.config.from_object('config')
 db.init_app(app)
 ma.init_app(app)
+migrate = Migrate(app, db)
 assets = Environment(app)
 assets.url = app.static_url_path
 

@@ -2,6 +2,8 @@ from . import db
 
 
 class Ciap(db.Model):
+    __bind_key__ = "esus"
+
     co_ciap = db.Column(db.String, primary_key=True)
     ds_ciap = db.Column(db.Text)
 
@@ -12,6 +14,8 @@ class Ciap(db.Model):
 
 
 class Cid10(db.Model):
+    __bind_key__ = "esus"
+
     co_cid10 = db.Column(db.Integer, primary_key=True)
     nu_cid10 = db.Column(db.String)
     no_cid10 = db.Column(db.Text)
@@ -24,6 +28,8 @@ class Cid10(db.Model):
 
 
 class Procedimento(db.Model):
+    __bind_key__ = "esus"
+    
     co_proced = db.Column(db.Integer, primary_key=True)
     no_proced = db.Column(db.String)
     st_exame = db.Column(db.Integer)

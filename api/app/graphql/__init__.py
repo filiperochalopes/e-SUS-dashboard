@@ -26,7 +26,15 @@ type_defs = gql(
     type Mutation {
         signup(
             "Senha mestra para cadastro de usuários via api, já que esse recurso só consegue ser utilizado por esse meio"
-            masterKey: String, 
+            masterKey: String!, 
+            """Algumas das funções disponíveis no sistema: 
+            - `adm` para funções administrativas, apenas leituras, 
+            - `all` para todas as funcionalidades, root, 
+            - `doc` para médicos, 
+            - `enf` para enfermagem e 
+            - `tec` para tecnicos de enfermagem
+            """
+            scope: String!
             "Nome do usuário a ser criado"
             name: String!, 
             "Email do usuário criado"

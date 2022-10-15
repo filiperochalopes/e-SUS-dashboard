@@ -2,6 +2,8 @@ from . import db
 
 
 class GrupoExame(db.Model):
+    __bind_key__ = "esus"
+
     co_seq_tagrupoexame = db.Column(db.Integer, primary_key=True)
     co_seq_grupo_exame = db.Column(db.Integer)
     no_grupo_exame = db.Column(db.Text)
@@ -13,6 +15,8 @@ class GrupoExame(db.Model):
 
 
 class ProcedimentoGrupoExame(db.Model):
+    __bind_key__ = "esus"
+
     co_seq_proced_grupo_exame = db.Column(db.Integer, primary_key=True)
     co_grupo_exame = db.Column(db.Integer)
     co_proced = db.Column(db.Integer)
@@ -21,6 +25,8 @@ class ProcedimentoGrupoExame(db.Model):
 
 
 class Procedimento(db.Model):
+    __bind_key__ = "esus"
+
     co_seq_proced = db.Column(db.Integer, primary_key=True)
     no_proced = db.Column(db.Text)
     co_proced = db.Column(db.Text, comment='Código procedimento SUS')
