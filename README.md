@@ -4,17 +4,32 @@ O Sistema [e-SUS APS PEC](https://sisaps.saude.gov.br/esus/) é composto de uma 
 
 ## COnfigurando variáveis de ambiente
 
+Criar arquivo .env com base na estrutura de variáveis exposto em .env.example 
+
 ```bash
+# Porta onde será exposta aplicação web que expõe a estrutura de tabelas, somente leitura
+PGWEB_PORT=8098
+# Porta que expõe a aplicação principal, é possível acessar a área de testes (playground) com http://localhost:8072/api/v1/graphql
+API_PORT=8072
+# É a senha mestra usado quando da criação de usuários pelo playground
+MASTER_KEY='passw@rd'
+# Chave de criptografia
+SECRET=
+# URL tcp do banco de dados que teremos acesso
 DATABASE_URL='postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@psql:5432/${POSTGRES_DB}?sslmode=disable'
 ```
 
 ## Gerando secret key
+
+Para preencher a variável `SECRET`, que identificada como chave de criptografia, tenha instalado o Python em sua máquina e rode em terminal o seguinte comando
 
 ```sh
 python -c 'import secrets; print(secrets.token_hex())'
 ```
 
 ## Reset app
+
+As seguintes linhas de código executam os comandos expressos nos respectivos blocos identificados em `Makefile`
 
 ```sh
 make run

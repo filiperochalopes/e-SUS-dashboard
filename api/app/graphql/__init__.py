@@ -42,15 +42,23 @@ type_defs = gql(
             "Senha temporária do usuário"
             password: String!): User
         updatePassword(email: String!, newPassword: String!): Boolean!
-        signin(username: String!, password: String!): Boolean!
+        signin(email: String!, password: String!): UserToken
         logout: Boolean!
     }
 
     type User{
+        id: ID!
         "Nome do usuário que será habilitado para realizar buscas nos resolvers autenticados"
         name:String!
         "Email do usuário que será habilitando para realizar buscas nos resolvers autenticados"
         email: String!
+        "Capacidade de acesso do usuário"
+        scope: String
+    }
+
+    type UserToken {
+        user: User
+        token: String
     }
 
     type Fixture {
