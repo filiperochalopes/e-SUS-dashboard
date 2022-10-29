@@ -18,9 +18,6 @@ def signup(_, info, master_key: str, scope: str, name: str, email: str, password
     password: Senha para acesso à plataforma
     '''
 
-    print('Hello World', file=sys.stderr)
-    print(master_key, file=sys.stderr)
-    print(MASTER_KEY, file=sys.stderr)
     if master_key == MASTER_KEY:
         # Cria um usuário em model
         encrypted_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())

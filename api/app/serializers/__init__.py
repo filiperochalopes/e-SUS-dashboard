@@ -1,10 +1,25 @@
 from flask_marshmallow import Marshmallow
+from app.models.User import User
 from app.models.Medicamento import Medicamento, Receita, ViaAdministracao, FormaFarmaceutica, UnidadeMedidaTempo, TipoFrequencia
 from app.models.Atendimento import Atendimento, AtendimentoProfissional, Problema
 from app.models.IniciarConsulta import Cid10
 from marshmallow_sqlalchemy import fields
 
 ma = Marshmallow()
+
+def camelcase(s):
+    parts = iter(s.split("_"))
+    return next(parts) + "".join(i.title() for i in parts)
+
+
+class CamelCaseSchema(ma.SQLAlchemyAutoSchema):
+    """Schema that uses camel-case for its external representation
+    and snake-case for its internal representation.
+    """
+
+    def on_bind_field(self, field_name, field_obj):
+
+        field_obj.data_key = camelcase(field_obj.data_key or field_name)
 
 class FormaFarmaceuticaSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
@@ -52,7 +67,6 @@ class Cid10Schema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Cid10
 
-
 class AtendimentoSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Atendimento
@@ -73,3 +87,8 @@ class ProblemaSchema(ma.SQLAlchemyAutoSchema):
 
     atendimento_profissional = fields.Nested(AtendimentoProfissionalSchema)
     cid10 = fields.Nested(Cid10Schema)
+
+class UserSchema(CamelCaseSchema):
+    class Meta:
+        model = User
+        include_fk = True
