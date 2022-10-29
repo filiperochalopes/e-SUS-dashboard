@@ -4,6 +4,8 @@ RUN apt-get update \
     && apt-get install gcc cron nginx -y \
     && apt-get clean
 
+RUN pip install --upgrade pip 
+
 COPY requirements.txt /app/requirements.txt
 WORKDIR /app
 RUN pip install -r requirements.txt
