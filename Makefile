@@ -12,8 +12,10 @@ update:
 	docker-compose up -d --build
 
 # Development environment
-run:
+run-build:
 	docker-compose up --build
+run:
+	docker-compose up
 down:
 	docker-compose down --remove-orphans --volumes
 logs:

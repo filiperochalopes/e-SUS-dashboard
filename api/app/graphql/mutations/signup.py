@@ -3,6 +3,7 @@ import sys
 
 from ariadne import convert_kwargs_to_snake_case
 from app.models import db
+from app.serializers import UserSchema
 from app.env import MASTER_KEY
 from app.graphql import mutation
 from app.models.User import User
@@ -29,7 +30,5 @@ def signup(_, info, master_key: str, scope: str, name: str, email: str, password
         raise Exception(
             'Você não tem permissões para entrar nessa rota, entre com uma masterKey correta')
 
-    return {
-        'name': name,
-        'email': email
-    }
+    schema = UserSchema()
+    return schema.dump(user)

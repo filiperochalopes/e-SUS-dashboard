@@ -1,4 +1,4 @@
-FROM python:slim-buster
+FROM python:3.11.0-slim-buster
 
 RUN apt-get update \
     && apt-get install gcc cron nginx -y \
