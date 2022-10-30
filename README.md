@@ -1,4 +1,4 @@
-# eSUS Dashboard
+# e-SUS PEC API
 
 O Sistema [e-SUS APS PEC](https://sisaps.saude.gov.br/esus/) é composto de uma estrutura complexa de banco de dados contendo colunas defasadas e atuais para retrocompatibilidade, é um probgrama amplamente utilizado na atenção básica ao redor do Brasil, porém pobre em exibição de métricas e análise inteligente dos dados, por isso o desenvolvimento dessa camada dem anipulação de dados para exposição dos mesmos em API com autenticação a fim de cálculo de métricas de desempenho dentre outras utilidades.
 
@@ -62,14 +62,18 @@ Para que seja impossível por meio dessa API editar os dados por acidente, permi
 ```sql
 -- Criando Role (Função)
 CREATE ROLE readaccess;
+ALTER ROLE readaccess LOGIN;
 -- Criando grupo de permissões para a Função
 GRANT CONNECT ON DATABASE esus TO readaccess;
 GRANT USAGE ON SCHEMA public TO readaccess;
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO readaccess;
+GRANT SELECT ON ALL TABLES IN SCHEMA "public" TO readaccess;
 -- Criando o usuário com a Função
-CREATE USER esus_reader WITH PASSWORD 'esus';
+CREATE USER esus_reader WITH PASSWORD "esus";
+-- Dando a possibilidade de realizar login para visualizar tabelas
 GRANT readaccess TO esus_reader;
 ```
+
+Aparentemente alguns comando não funcionam diretamente na linha de comando `psql`, mas funcionaram com o `dbeaver` para parte de rodar comando sql. That's odd! 😖
 
 ### Verificando mais sobre uma tabela para apromorar API
 

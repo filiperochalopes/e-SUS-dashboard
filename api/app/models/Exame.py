@@ -1,4 +1,6 @@
 from . import db
+from sqlalchemy.orm import relationship
+
 
 '''
 Exames de valores unitários e seriáveis
@@ -32,23 +34,27 @@ class ExameFisicoMedicao(db.Model):
 
     co_seq_medicao = db.Column(db.Integer, primary_key=True)
     dt_medicao = db.Column(db.DateTime)
-    co_atend_prof = db.Column(db.Integer)
+    co_atend_prof = db.Column(db.Integer, db.ForeignKey(
+        'tb_atend_prof.co_seq_atend_prof'))
     dt_ultima_menstruacao = db.Column(db.DateTime)
-    nu_medicao_peso = db.Column(db.Float)
-    nu_medicao_altura = db.Column(db.Float)
-    nu_medicao_frequencia_cardiaca = db.Column(db.Integer)
-    nu_medicao_pressao_arterial = db.Column(db.Integer)
-    nu_medicao_perimetro_cefalico = db.Column(db.Integer)
-    nu_medicao_frequnca_resprtria = db.Column(db.Integer)
-    nu_medicao_saturacao_o2 = db.Column(db.Integer)
+    nu_medicao_peso = db.Column(db.String)
+    nu_medicao_altura = db.Column(db.String)
+    nu_medicao_frequencia_cardiaca = db.Column(db.String)
+    nu_medicao_pressao_arterial = db.Column(db.String)
+    nu_medicao_perimetro_cefalico = db.Column(db.String)
+    nu_medicao_frequnca_resprtria = db.Column(db.String)
+    nu_medicao_temperatura = db.Column(db.String)
+    nu_medicao_saturacao_o2 = db.Column(db.String)
     tp_glicemia = db.Column(db.Integer)
-    nu_medicao_glicemia = db.Column(db.Integer)
-    nu_medicao_imc = db.Column(db.Float)
-    nu_medicao_altura_uterina = db.Column(db.Integer)
-    nu_medicao_batimnto_cardco_ftl = db.Column(db.Integer)
-    nu_medicao_vacinacao_em_dia = db.Column(db.Boolean)
-    nu_medicao_perimetro_panturrilha = db.Column(db.Boolean)
-    nu_medicao_circunf_abdominal = db.Column(db.Boolean)
+    nu_medicao_glicemia = db.Column(db.String)
+    nu_medicao_imc = db.Column(db.String)
+    nu_medicao_altura_uterina = db.Column(db.String)
+    nu_medicao_batimnto_cardco_ftl = db.Column(db.String)
+    nu_medicao_vacinacao_em_dia = db.Column(db.String)
+    nu_perimetro_panturrilha = db.Column(db.String)
+    nu_medicao_circunf_abdominal = db.Column(db.String)
+
+    atendimento_profissional = relationship('AtendimentoProfissional', uselist=False, lazy='selectin', foreign_keys=[co_atend_prof], back_populates='medicao')
 
     __tablename__ = "tb_medicao"
 

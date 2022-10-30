@@ -25,7 +25,6 @@ def signup(_, info, master_key: str, scope: str, name: str, email: str, password
         user = User(name=name, scope=scope, email=email, password=encrypted_password)
         db.session.add(user)
         db.session.commit()
-        print(info, file=sys.stderr)
     else:
         raise Exception(
             'Você não tem permissões para entrar nessa rota, entre com uma masterKey correta')

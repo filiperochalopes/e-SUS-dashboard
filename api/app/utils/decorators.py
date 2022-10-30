@@ -17,7 +17,7 @@ def token_authorization(func):
             if not token:
                 raise Exception('Token ausente ou inválido')
             user, token = check_token(token).values()
-            print(user, file=sys.stderr)
+            
             if not user:
                 raise Exception('Token inválido')
         else:

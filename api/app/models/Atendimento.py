@@ -1,6 +1,8 @@
 from . import db
 from sqlalchemy.orm import relationship
-from app.models.IniciarConsulta import Cid10
+import app.models.Exame
+import app.models.Cidadao
+import app.models.Gestante
 
 # TODO tb_evolucao_objetivo
 # TODO tb_evolucao_subjetivo
@@ -22,7 +24,9 @@ class AtendimentoProfissional(db.Model):
         'tb_atend.co_seq_atend'), nullable=True)
     
     atendimento = relationship(
-        'Atendimento', uselist=False, lazy='selectin', foreign_keys=[co_atend])
+        'Atendimento', uselist=False, lazy='selectin', foreign_keys=[co_atend], back_populates='atendimentos_profissionais')
+    
+    medicao = relationship('ExameFisicoMedicao', uselist=False, back_populates='atendimento_profissional')
 
     __tablename__ = "tb_atend_prof"
 
@@ -34,9 +38,14 @@ class Atendimento(db.Model):
     __bind_key__ = "esus"
 
     co_seq_atend = db.Column(db.Integer, primary_key=True)
-    co_prontuario = db.Column(db.Integer)
+    co_prontuario = db.Column(db.Integer, db.ForeignKey('tb_prontuario.co_seq_prontuario'))
     st_registro_tardio = db.Column(db.Integer)
     tp_local_atend = db.Column(db.Integer)
+
+    prontuario = relationship('Prontuario', uselist=True, lazy='selectin', foreign_keys=[co_prontuario], back_populates='atendimentos')
+
+    atendimentos_profissionais = relationship(
+        'AtendimentoProfissional', uselist=True, lazy='selectin', back_populates='atendimento')
 
     __tablename__ = "tb_atend"
 
@@ -48,7 +57,14 @@ class Prontuario(db.Model):
     __bind_key__ = "esus"
 
     co_seq_prontuario = db.Column(db.Integer, primary_key=True)
-    co_cidadao = db.Column(db.Integer)
+    co_cidadao = db.Column(db.Integer, db.ForeignKey('tb_cidadao.co_seq_cidadao'))
+
+    atendimentos = relationship('Atendimento', uselist=True, lazy='selectin', back_populates='prontuario')
+
+    prenatais = relationship('PreNatal', uselist=True, lazy='selectin', back_populates='prontuario')
+
+    cidadao = relationship(
+        'Cidadao', uselist=False, lazy='selectin', foreign_keys=[co_cidadao], back_populates='prontuario')
 
     __tablename__ = "tb_prontuario"
 

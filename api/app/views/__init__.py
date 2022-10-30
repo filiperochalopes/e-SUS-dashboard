@@ -63,40 +63,9 @@ def dashboard():
     df = df.drop_duplicates(subset=['Prontuario', 'CID10'])
     n_df = df[['Problema']].value_counts().rename_axis('Problema').reset_index(name='Qtd')
 
-    print(n_df)
-
     fig = px.pie(n_df[:20], values='Qtd', names='Problema', hole=.2)
 
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     # return render_template('index.html')
     return render_template('index.html', graphJSON=graphJSON)
-
-
-@all_views.route("/pacientes")
-def pacientes():
-    '''
-    Aqui aparece um mini prontuário de cada um com a opção de exportação em json para o PIN
-    '''
-    # buca por pacientes, mostrnado numero de telefone, numero de consultas, lista de problemas e documentos
-    # co_prontuario em tb_medicacao_uso_continuo
-    # tb_medicacao dados objetivos do exame físico glicemia, PA (co_atend_prof)
-    # tb_atend_prof, tb_atend, tb_atend_prof_pre_natal
-    # a intencao aqui eh exportar o prontuario para o pin, comecar por aqui
-    return "<p>Hello, World!</p>"
-
-
-@all_views.route("/procedimentos")
-def exames():
-    Procedimento.query.all()
-    return "<p>Hello, World!</p>"
-
-
-@all_views.route("/db-test")
-def db_test():
-    cidadaos = Cidadao.query.all()
-    for cidadao in cidadaos:
-        print(cidadao.no_cidadao)
-        print(cidadao.dt_nascimento)
-        print(cidadao.nu_telefone_celular or cidadao.nu_telefone_contato)
-    return "<p>Hello, World! 2</p>"

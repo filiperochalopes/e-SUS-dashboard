@@ -1,4 +1,5 @@
 from . import db
+from sqlalchemy.orm import relationship
 
 '''
 Models relacionados aos registros de dados das gestantes
@@ -43,15 +44,18 @@ class PreNatal(db.Model):
     __bind_key__ = "esus"
 
     co_seq_pre_natal = db.Column(db.Integer, primary_key=True)
-    co_prontuario = db.Column(db.Integer)
+    co_prontuario = db.Column(db.Integer, db.ForeignKey('tb_prontuario.co_seq_prontuario'))
     tp_gravidez = db.Column(db.Integer)
     dt_ultima_menstruacao = db.Column(db.DateTime)
     st_alto_risco = db.Column(db.Boolean)
 
+    prontuario = relationship(
+        'Prontuario', uselist=False, lazy='selectin', foreign_keys=[co_prontuario], back_populates='prenatais')
+
     __tablename__ = "tb_pre_natal"
 
     def __repr__(self):
-        return '<Pre Natal %r>' % self.co_problema
+        return '<Pre Natal %r>' % self.co_seq_pre_natal
 
 
 class AtendimentoProfissionalPreNatal(db.Model):

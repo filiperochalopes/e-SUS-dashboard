@@ -1,4 +1,5 @@
 from . import db
+from sqlalchemy.orm import relationship
 
 class Cidadao(db.Model):
     __bind_key__ = "esus"
@@ -11,6 +12,9 @@ class Cidadao(db.Model):
     nu_telefone_contato = db.Column(db.Text)
     no_sexo = db.Column(db.Text)
     dt_nascimento = db.Column(db.DateTime)
+
+    prontuario = relationship(
+        'Prontuario', uselist=False, lazy='selectin', back_populates='cidadao')
 
     __tablename__ = "tb_cidadao"
 

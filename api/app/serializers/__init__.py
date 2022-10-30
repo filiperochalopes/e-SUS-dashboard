@@ -1,11 +1,15 @@
 from flask_marshmallow import Marshmallow
 from app.models.User import User
 from app.models.Medicamento import Medicamento, Receita, ViaAdministracao, FormaFarmaceutica, UnidadeMedidaTempo, TipoFrequencia
-from app.models.Atendimento import Atendimento, AtendimentoProfissional, Problema
+from app.models.Atendimento import Atendimento, AtendimentoProfissional, Problema, Prontuario
 from app.models.IniciarConsulta import Cid10
+from app.models.Cidadao import Cidadao
+from app.models.Gestante import PreNatal
+from app.models.Exame import ExameFisicoMedicao
 from marshmallow_sqlalchemy import fields
 
 ma = Marshmallow()
+
 
 def camelcase(s):
     parts = iter(s.split("_"))
@@ -20,6 +24,7 @@ class CamelCaseSchema(ma.SQLAlchemyAutoSchema):
     def on_bind_field(self, field_name, field_obj):
 
         field_obj.data_key = camelcase(field_obj.data_key or field_name)
+
 
 class FormaFarmaceuticaSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
@@ -67,28 +72,67 @@ class Cid10Schema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Cid10
 
-class AtendimentoSchema(ma.SQLAlchemyAutoSchema):
+
+class MedicaoSchema(CamelCaseSchema):
     class Meta:
-        model = Atendimento
+        model = ExameFisicoMedicao
 
 
-class AtendimentoProfissionalSchema(ma.SQLAlchemyAutoSchema):
+class AtendimentoProfissionalSchema(CamelCaseSchema):
     class Meta:
         model = AtendimentoProfissional
+        include_fk = True
         include_relationships = True
 
-    atendimento = fields.Nested(AtendimentoSchema)
+    medicao = fields.Nested(MedicamentoSchema)
 
 
-class ProblemaSchema(ma.SQLAlchemyAutoSchema):
+class AtendimentoSchema(CamelCaseSchema):
+    class Meta:
+        model = Atendimento
+        include_fk = True
+        include_relationships = True
+
+    atendimentos_profissionais = fields.RelatedList(fields.Nested(AtendimentoProfissionalSchema))
+
+
+class ProblemaSchema(CamelCaseSchema):
     class Meta:
         model = Problema
+        include_fk = True
         include_relationships = True
 
     atendimento_profissional = fields.Nested(AtendimentoProfissionalSchema)
     cid10 = fields.Nested(Cid10Schema)
 
+
 class UserSchema(CamelCaseSchema):
     class Meta:
         model = User
         include_fk = True
+
+
+class PreNatalSchema(CamelCaseSchema):
+    class Meta:
+        model = PreNatal
+        include_relationships = True
+        include_fk = True
+
+
+class ProntuarioSchema(CamelCaseSchema):
+    class Meta:
+        model = Prontuario
+        include_relationships = True
+        include_fk = True
+
+    atendimentos = fields.RelatedList(fields.Nested(AtendimentoSchema))
+    prenatais = fields.RelatedList(fields.Nested(PreNatalSchema, exclude=('co_prontuario',)))
+
+
+class CidadaoSchema(CamelCaseSchema):
+    class Meta:
+        model = Cidadao
+        include_relationships = True
+        include_fk = True
+
+    prontuario = fields.Nested(ProntuarioSchema)
