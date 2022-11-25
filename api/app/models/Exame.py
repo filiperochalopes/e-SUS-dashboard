@@ -1,10 +1,6 @@
 from . import db
 from sqlalchemy.orm import relationship
-
-
-'''
-Exames de valores unitários e seriáveis
-'''
+import app.models.Procedimento
 
 
 class RequisicaoExame(db.Model):
@@ -54,7 +50,8 @@ class ExameFisicoMedicao(db.Model):
     nu_perimetro_panturrilha = db.Column(db.String)
     nu_medicao_circunf_abdominal = db.Column(db.String)
 
-    atendimento_profissional = relationship('AtendimentoProfissional', uselist=False, lazy='selectin', foreign_keys=[co_atend_prof], back_populates='medicao')
+    atendimento_profissional = relationship('AtendimentoProfissional', uselist=False, lazy='selectin', foreign_keys=[
+                                            co_atend_prof], back_populates='medicao')
 
     __tablename__ = "tb_medicao"
 
@@ -65,16 +62,43 @@ class ExameRequisitado(db.Model):
     co_seq_exame_requisitado = db.Column(db.Integer, primary_key=True)
     st_conferido = db.Column(db.Boolean)
     dt_resultado = db.Column(db.DateTime)
-    co_atend_prof = db.Column(db.Integer)
-    co_procecd = db.Column(db.Integer)  # Nome do exame solicitado
+    co_atend_prof = db.Column(db.Integer, db.ForeignKey(
+        'tb_atend_prof.co_seq_atend_prof'))
+    co_proced = db.Column(db.Integer, db.ForeignKey(
+        'tb_proced.co_seq_proced'))  # Nome do exame solicitado
     co_requisicao_exame = db.Column(db.Integer)
     dt_realizacao = db.Column(db.DateTime)
     ds_resultado = db.Column(db.Text)
+
+    atendimento_profissional = relationship('AtendimentoProfissional', uselist=False, lazy='selectin', foreign_keys=[
+                                            co_atend_prof], back_populates='exames_requisitados')
+
+    procedimento = relationship(
+        'Procedimento', uselist=False, lazy='selectin', foreign_keys=[co_proced])
+
+    exames_prenatal = relationship(
+        'ExamePrenatal', back_populates='exame_requisitado')
 
     __tablename__ = "tb_exame_requisitado"
 
     def __repr__(self):
         return '<Exame Requisitado %r>' % self.co_procecd
+
+
+class ExamePrenatal(db.Model):
+    __bind_key__ = "esus"
+
+    co_seq_exame_prenatal = db.Column(db.Integer, primary_key=True)
+    co_exame_requisitado = db.Column(db.Integer, db.ForeignKey(
+        'tb_exame_requisitado.co_seq_exame_requisitado'))
+    qt_semana_gestacional_eco = db.Column(db.Integer)
+    qt_dia_gestacional_eco = db.Column(db.Integer)
+    dt_provavel_parto_eco = db.Column(db.DateTime)
+
+    exame_requisitado = relationship('ExameRequisitado', uselist=False, lazy='selectin', foreign_keys=[
+                                     co_exame_requisitado], back_populates='exames_prenatal')
+
+    __tablename__ = "tb_exame_prenatal"
 
 
 class ExameColesterolHDL(db.Model):

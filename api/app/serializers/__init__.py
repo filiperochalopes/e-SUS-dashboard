@@ -5,7 +5,7 @@ from app.models.Atendimento import Atendimento, AtendimentoProfissional, Problem
 from app.models.IniciarConsulta import Cid10
 from app.models.Cidadao import Cidadao
 from app.models.Gestante import PreNatal
-from app.models.Exame import ExameFisicoMedicao
+from app.models.Exame import ExameFisicoMedicao, ExamePrenatal, ExameRequisitado
 from marshmallow_sqlalchemy import fields
 
 ma = Marshmallow()
@@ -22,9 +22,7 @@ class CamelCaseSchema(ma.SQLAlchemyAutoSchema):
     """
 
     def on_bind_field(self, field_name, field_obj):
-
         field_obj.data_key = camelcase(field_obj.data_key or field_name)
-
 
 class FormaFarmaceuticaSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
@@ -78,13 +76,32 @@ class MedicaoSchema(CamelCaseSchema):
         model = ExameFisicoMedicao
 
 
+class ExamePrenatalSchema(CamelCaseSchema):
+    class Meta:
+        model = ExamePrenatal
+        include_fk = True
+        include_relationships = True
+
+
+class ExameRequisitadoSchema(CamelCaseSchema):
+    class Meta:
+        model = ExameRequisitado
+        include_fk = True
+        load_instance = True
+        include_relationships = True
+    
+    exames_prenatal = fields.RelatedList(fields.Nested(ExamePrenatalSchema))
+
+        
 class AtendimentoProfissionalSchema(CamelCaseSchema):
     class Meta:
         model = AtendimentoProfissional
         include_fk = True
+        load_instance = True
         include_relationships = True
 
     medicao = fields.Nested(MedicamentoSchema)
+    exames_requisitados = fields.RelatedList(fields.Nested(ExameRequisitadoSchema))
 
 
 class AtendimentoSchema(CamelCaseSchema):

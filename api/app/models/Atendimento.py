@@ -27,6 +27,7 @@ class AtendimentoProfissional(db.Model):
         'Atendimento', uselist=False, lazy='selectin', foreign_keys=[co_atend], back_populates='atendimentos_profissionais')
     
     medicao = relationship('ExameFisicoMedicao', uselist=False, back_populates='atendimento_profissional')
+    exames_requisitados = relationship('ExameRequisitado', uselist=True, back_populates='atendimento_profissional')
 
     __tablename__ = "tb_atend_prof"
 
@@ -63,30 +64,53 @@ class Prontuario(db.Model):
 
     prenatais = relationship('PreNatal', uselist=True, lazy='selectin', back_populates='prontuario')
 
+    problemas = relationship('Problema', uselist=True, lazy='selectin', back_populates='prontuario')
+
     cidadao = relationship(
         'Cidadao', uselist=False, lazy='selectin', foreign_keys=[co_cidadao], back_populates='prontuario')
 
     __tablename__ = "tb_prontuario"
 
-# ? tb_problema_evolucao
-# ? tb_problema
+class SituacaoProblema(db.Model):
+    '''Status do problema: ativo, latente ou resolvido'''
+    __bind_key__ = "esus"
+
+    co_seq_situacao_problema = db.Column(db.Integer, primary_key=True)
+    no_situacao_problema = db.Column(db.String)
+
+    __tablename__ = "tb_situacao_problema"
+
+
 class Problema(db.Model):
     __bind_key__ = "esus"
-    
-    co_seq_evolucao_aval_ciap_cid = db.Column(db.Integer, primary_key=True)
+
+    co_seq_problema = db.Column(db.Integer, primary_key=True)
     co_cid10 = db.Column(db.Integer, db.ForeignKey(
         'tb_cid10.co_cid10'), nullable=True)
-    ds_nota = db.Column(db.Text)
+    co_prontuario = db.Column(db.Integer, db.ForeignKey('tb_prontuario.co_seq_prontuario'))
+
+    cid10 = relationship(
+        'Cid10', uselist=False, lazy='selectin', foreign_keys=[co_cid10])
+    
+    problema_evolucao = relationship('ProblemaEvolucao', back_populates='problema')
+    
+    prontuario = relationship('Prontuario', uselist=False, lazy='selectin', foreign_keys=[co_prontuario], back_populates='problemas')
+
+    __tablename__ = "tb_problema"
+
+class ProblemaEvolucao(db.Model):
+    __bind_key__ = "esus"
+    
+    co_seq_problema_evolucao = db.Column(db.Integer, primary_key=True)
+    co_unico_problema = db.Column(db.Integer, db.ForeignKey(
+        'tb_problema.co_seq_problema'), nullable=True)
+    ds_observacao = db.Column(db.Text)
     co_atend_prof = db.Column(db.Integer, db.ForeignKey(
         'tb_atend_prof.co_seq_atend_prof'), nullable=True)
 
     atendimento_profissional = relationship(
         'AtendimentoProfissional', uselist=False, lazy='selectin', foreign_keys=[co_atend_prof])
-    
-    cid10 = relationship(
-        'Cid10', uselist=False, lazy='selectin', foreign_keys=[co_cid10])
+    problema = relationship(
+        'Problema', uselist=False, lazy='selectin', foreign_keys=[co_unico_problema], back_populates='problema_evolucao')
 
-    __tablename__ = "tl_evolucao_avaliacao_ciap_cid"
-
-    def __repr__(self):
-        return f'<Problema {self.co_cid10}>'
+    __tablename__ = "tb_problema_evolucao"

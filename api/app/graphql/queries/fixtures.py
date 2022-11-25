@@ -1,7 +1,8 @@
 import json
 from app.graphql import query
 
-from app.models.IniciarConsulta import Ciap, Cid10, Procedimento
+from app.models.IniciarConsulta import Ciap, Cid10
+from app.models.Procedimento import Procedimento
 from app.models.Medicamento import FormaFarmaceutica, Medicamento, MedicamentoPrincipioAtivo, Receita, TipoFrequencia, TipoReceita, ViaAdministracao
 
 

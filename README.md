@@ -68,7 +68,7 @@ GRANT CONNECT ON DATABASE esus TO readaccess;
 GRANT USAGE ON SCHEMA public TO readaccess;
 GRANT SELECT ON ALL TABLES IN SCHEMA "public" TO readaccess;
 -- Criando o usuário com a Função
-CREATE USER esus_reader WITH PASSWORD "esus";
+CREATE USER esus_reader WITH PASSWORD 'esus';
 -- Dando a possibilidade de realizar login para visualizar tabelas
 GRANT readaccess TO esus_reader;
 ```

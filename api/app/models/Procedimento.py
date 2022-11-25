@@ -26,9 +26,14 @@ class ProcedimentoGrupoExame(db.Model):
 
 class Procedimento(db.Model):
     __bind_key__ = "esus"
-
+    
     co_seq_proced = db.Column(db.Integer, primary_key=True)
-    no_proced = db.Column(db.Text)
-    co_proced = db.Column(db.Text, comment='Código procedimento SUS')
+    no_proced = db.Column(db.String)
+    st_exame = db.Column(db.Integer)
+    st_ativo = db.Column(db.Integer)
+    tp_proced = db.Column(db.String)
 
-    __tablename__ = "ta_proced_grupo_exame"
+    __tablename__ = "tb_proced"
+
+    def __repr__(self):
+        return f'<Procedimento {self.co_proced} - {self.no_proced}>'

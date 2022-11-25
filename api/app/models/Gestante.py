@@ -18,16 +18,6 @@ class TipoGravidez(db.Model):
         return '<Gravidez %r>' % self.no_tipo_gravidez
 
 
-class ExamePrenatal(db.Model):
-    __bind_key__ = "esus"
-
-    co_seq_exame_prenatal = db.Column(db.Integer, primary_key=True)
-    co_exame_requisitado = db.Column(db.Integer)
-    qt_semana_gestacional_eco = db.Column(db.Integer)
-    qt_dia_gestacional_eco = db.Column(db.Integer)
-    dt_provavel_parto_eco = db.Column(db.DateTime)
-
-
 class TipoEdema(db.Model):
     __bind_key__ = "esus"
 
