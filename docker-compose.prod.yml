@@ -14,5 +14,3 @@ services:
     stdin_open: true
     ports:
       - "${API_PORT}:5000"
-    depends_on:
-      - psql

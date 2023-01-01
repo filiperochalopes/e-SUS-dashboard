@@ -1,12 +1,12 @@
 # Production
 prod_run:
-	docker-compose -f docker-compose.prod.yml down --remove-orphans --volumes
-	docker-compose down --remove-orphans --volumes
-	docker-compose -f docker-compose.prod.yml up -d
+	docker compose -f docker-compose.prod.yml down --remove-orphans --volumes
+	docker compose down --remove-orphans --volumes
+	docker compose -f docker-compose.prod.yml up -d
 prod_update:
-	docker-compose -f docker-compose.prod.yml down --remove-orphans --volumes
-	docker-compose down --remove-orphans --volumes
-	docker-compose -f docker-compose.prod.yml up -d --build
+	docker compose -f docker-compose.prod.yml down --remove-orphans --volumes
+	docker compose down --remove-orphans --volumes
+	docker compose -f docker-compose.prod.yml up -d --build
 update:
 	docker-compose down --remove-orphans --volumes
 	docker-compose up -d --build
