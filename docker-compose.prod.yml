@@ -1,7 +1,7 @@
 version: "3"
 services:
   api:
-    container_name: esus_api
+    container_name: esus_dashboard_api
     restart: always
     build:
       context: api
@@ -11,6 +11,8 @@ services:
       - ./api/nginx.conf:/etc/nginx/sites-enabled/default
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@psql:5432/${POSTGRES_DB}?sslmode=disable
+      - MASTER_KEY=${MASTER_KEY}
+      - SECRET=${SECRET}
     stdin_open: true
     ports:
       - "${API_PORT}:5000"
