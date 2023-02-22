@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from app.serializers import ma
 from flask_migrate import Migrate
-from flask_assets import Bundle, Environment
 from flask_cors import CORS
 from ariadne.constants import PLAYGROUND_HTML
 from ariadne import graphql_sync, make_executable_schema
@@ -17,15 +16,6 @@ db.init_app(app)
 ma.init_app(app)
 CORS(app)
 migrate = Migrate(app, db)
-assets = Environment(app)
-assets.url = app.static_url_path
-
-scss = Bundle(
-    "scss/styles.scss",
-    filters="libsass",
-    output="css/styles.css"
-)
-assets.register("scss_all", scss)
 
 
 @app.errorhandler(404)
