@@ -1,4 +1,3 @@
-from flask_marshmallow import Marshmallow
 from app.models.User import User
 from app.models.Medicamento import Medicamento, Receita, ViaAdministracao, FormaFarmaceutica, UnidadeMedidaTempo, TipoFrequencia
 from app.models.Atendimento import Atendimento, AtendimentoProfissional, Problema, Prontuario
@@ -6,10 +5,10 @@ from app.models.IniciarConsulta import Cid10
 from app.models.Cidadao import Cidadao
 from app.models.Gestante import PreNatal
 from app.models.Exame import ExameFisicoMedicao, ExamePrenatal, ExameRequisitado
+from flask_marshmallow import Marshmallow
 from marshmallow_sqlalchemy import fields
 
 ma = Marshmallow()
-
 
 def camelcase(s):
     parts = iter(s.split("_"))
@@ -17,7 +16,8 @@ def camelcase(s):
 
 
 class CamelCaseSchema(ma.SQLAlchemyAutoSchema):
-    """Schema that uses camel-case for its external representation
+    """
+    Schema that uses camel-case for its external representation
     and snake-case for its internal representation.
     """
 
@@ -100,7 +100,7 @@ class AtendimentoProfissionalSchema(CamelCaseSchema):
         load_instance = True
         include_relationships = True
 
-    medicao = fields.Nested(MedicamentoSchema)
+    medicao = fields.Nested(MedicaoSchema)
     exames_requisitados = fields.RelatedList(fields.Nested(ExameRequisitadoSchema))
 
 
@@ -146,7 +146,7 @@ class ProntuarioSchema(CamelCaseSchema):
     prenatais = fields.RelatedList(fields.Nested(PreNatalSchema, exclude=('co_prontuario',)))
 
 
-class CidadaoSchema(CamelCaseSchema):
+class CidadaoSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Cidadao
         include_relationships = True
