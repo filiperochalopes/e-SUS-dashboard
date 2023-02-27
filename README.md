@@ -50,6 +50,8 @@ docker exec -it esus_dashboard_api bash
 flask db init --multidb
 flask db migrate -m "Initial migration"
 flask db upgrade
+# Adicione o dump *.sql na pasta db para dados de inicialização para fins de teste
+
 ```
 
 ## Dicas de navegação no banco de dados do PEC
