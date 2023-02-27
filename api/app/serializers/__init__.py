@@ -146,7 +146,7 @@ class ProntuarioSchema(CamelCaseSchema):
     prenatais = fields.RelatedList(fields.Nested(PreNatalSchema, exclude=('co_prontuario',)))
 
 
-class CidadaoSchema(ma.SQLAlchemyAutoSchema):
+class CidadaoSchema(CamelCaseSchema):
     class Meta:
         model = Cidadao
         include_relationships = True

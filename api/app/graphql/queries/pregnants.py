@@ -21,7 +21,7 @@ class Pregnancy:
         self.first_usg_date = first_usg_date.date() if first_usg_date else None
         self.lmp_gestational_age = self.get_gestational_age()[0]
         self.usg_gestational_age = self.get_gestational_age()[1]
-        self.set_initial_date()
+        self.initial_date = self.get_initial_date()
         self.gestational_age = self.get_gestational_age()[2]
         self.due_date = self.get_gestational_due_date()
         self.first_trimester_ending_date = self.initial_date + timedelta(weeks=13, days=6)
@@ -29,7 +29,7 @@ class Pregnancy:
         self.third_trimester_ending_date = self.initial_date + timedelta(weeks=42, days=6)
         print("Finalizando inicialização", file=sys.stderr)
     
-    def set_initial_date(self):
+    def get_initial_date(self):
         print("Iniciando set_initial_date", file=sys.stderr)
         '''Calcula a data inicial da forma mais eficiente
         Reference: https://pubmed.ncbi.nlm.nih.gov/12501080
@@ -42,6 +42,7 @@ class Pregnancy:
             Greater than 21 days after 28 0/7 weeks by LMP
         Assumir a data da USG. Ref.: ACOG
         '''
+        initial_date = date.today()
         # Verifica se existe alguma ultrassonografia, se não existir retorna a data inicial com base na dum (LMP)
         if self.first_usg_date is None:
             print('Breakpoint 1', file=sys.stderr)
@@ -58,19 +59,20 @@ class Pregnancy:
         # Se corresponder a algum dos critérios usa a base
         print('Breakpoint 4', file=sys.stderr)
         if (lmp_w < 9 and difference_days > 5) or (lmp_w >= 9 and lmp_w < 16 and difference_days > 7) or (lmp_w >= 16 and lmp_w < 22 and difference_days > 10) or (lmp_w >= 22 and lmp_w < 28 and difference_days > 14) or (lmp_w >= 28 and difference_days > 21):
-            self.initial_date = self.first_usg_date - timedelta(weeks=usg_w, days=usg_d)
+            initial_date = self.first_usg_date - timedelta(weeks=usg_w, days=usg_d)
         else:
-            self.initial_date = self.first_usg_date - timedelta(weeks=lmp_w, days=lmp_d)
+            initial_date = self.first_usg_date - timedelta(weeks=lmp_w, days=lmp_d)
         print('===================================', file=sys.stderr)
         print('defining self.initial_date', file=sys.stderr)
-        print(self.initial_date, file=sys.stderr)
+        print(initial_date, file=sys.stderr)
         print('===================================', file=sys.stderr)
+        return initial_date
         
     def get_gestational_due_date(self) -> date:
         print("Iniciando get_gestational_due_date", file=sys.stderr)
         '''Calcula a data prevista de parto assumindo um ciclo de 28 dias com ovulação ocorrendo no décimo quarto dia. Pode ocorrer então um erro de mais de 2 semanas. Em caso de sabido exatamente a data de fertilização como em vitro, adicionar 266 dias do dia da concepção
         '''
-        return (self.initial_date + timedelta(days=280)).date()
+        return self.initial_date + timedelta(days=280)
 
     @staticmethod
     def split_gestational_age_string(string) -> tuple:
@@ -140,48 +142,52 @@ def pregnant(*_, current_user: User):
     pregnants = [schema.dump(p) for p in pregnants]
     
     pregnants_return = []
-    for p in pregnants:
-        # Verifica a primeira ultrassonografia
-        prenatal_usg = []
-        print('---------- Exames ----------', file=sys.stderr)
-        for schedule in p['prontuario']['atendimentos']:
-            for professional_service in schedule['atendimentosProfissionais']:
-                for exam in professional_service['examesRequisitados']:
-                    for prenatal_exams in exam['examesPrenatal']:
-                        print(prenatal_exams, file=sys.stderr)
-        print('---------- ------ ----------', file=sys.stderr)
+    if len(pregnants) > 0:
+        for p in pregnants:
+            # Verifica a primeira ultrassonografia
+            prenatal_usg = []
+            print('---------- Exames ----------', file=sys.stderr)
+            for schedule in p['prontuario']['atendimentos']:
+                for professional_service in schedule['atendimentosProfissionais']:
+                    for exam in professional_service['examesRequisitados']:
+                        for prenatal_exams in exam['examesPrenatal']:
+                            print(prenatal_exams, file=sys.stderr)
+            print('---------- ------ ----------', file=sys.stderr)
 
-        # Verifica os exames de sangue
-        first_trimester_exams = []
-        second_trimester_exams = []
-        third_trimester_exams = []
+            # Verifica os exames de sangue
+            first_trimester_exams = []
+            second_trimester_exams = []
+            third_trimester_exams = []
 
-        print('Criando instância Pregnancy', file=sys.stderr)
-        pregnancy = Pregnancy(
-            last_menstrual_period=datetime.strptime(p['prontuario']['prenatais'][-1]['dtUltimaMenstruacao'], '%Y-%m-%dT%H:%M:%S%z')
-        )
+            print('Criando instância Pregnancy', file=sys.stderr)
+            pregnancy = Pregnancy(
+                last_menstrual_period=datetime.strptime(p['prontuario']['prenatais'][-1]['dtUltimaMenstruacao'], '%Y-%m-%dT%H:%M:%S%z')
+            )
 
-        print('Adicionando nova gestante', file=sys.stderr)
-        pregnants_return.append({
-        'patient': {
-                'id': p['coSeqCidadao'],
-                'name': p['noCidadao'],
-                'cns': p['nuCns'],
-                'phone': p['nuTelefoneCelular'],
-                'birthDay': p['dtNascimento'],
-            },
-        'lastMenstrualPeriod': pregnancy.last_menstrual_period,
-        'gestationalAgeDUM': pregnancy.lmp_gestational_age,
-        'gestationalAgeUSG': pregnancy.usg_gestational_age,
-        'gestationalAge': pregnancy.gestational_age,
-        'prenatalVisits': len(p['prontuario']['prenatais']),
-        'gestationalAgeFirstVisit': pregnancy.get_gestational_age,
-        'probableDeliveryDate': '2022/01/02',
-        'firstTrimesterExams': [],
-        'secondTrimesterExams': [],
-        'thirdTrimesterExams': [],
-        'SyphilisTest': True,
-        'HIVTest': False,
-        'dentistVisits': 0,
-        'problems': []
-    })
+            print('Adicionando nova gestante', file=sys.stderr)
+            pregnants_return.append({
+            'patient': {
+                    'id': p['coSeqCidadao'],
+                    'name': p['noCidadao'],
+                    'cns': p['nuCns'],
+                    'phone': p['nuTelefoneCelular'],
+                    'birthDay': p['dtNascimento'],
+                },
+            'lastMenstrualPeriod': pregnancy.last_menstrual_period,
+            'gestationalAgeDUM': pregnancy.lmp_gestational_age,
+            'gestationalAgeUSG': pregnancy.usg_gestational_age,
+            'gestationalAge': pregnancy.gestational_age,
+            'prenatalVisits': len(p['prontuario']['prenatais']),
+            'gestationalAgeFirstVisit': pregnancy.get_gestational_age,
+            'probableDeliveryDate': '2022/01/02',
+            'firstTrimesterExams': [],
+            'secondTrimesterExams': [],
+            'thirdTrimesterExams': [],
+            'SyphilisTest': True,
+            'HIVTest': False,
+            'dentistVisits': 0,
+            'problems': []
+        })
+    
+    print(pregnants_return, file=sys.stderr)    
+    return pregnants_return

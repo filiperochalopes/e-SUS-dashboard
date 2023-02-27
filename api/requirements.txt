@@ -1,5 +1,6 @@
 psycopg2-binary==2.9.5
 flask==2.2.3
+sqlalchemy==1.4.46
 Flask-SQLAlchemy==3.0.3
 flask-marshmallow==0.14.0
 Flask-Assets==2.0

@@ -46,6 +46,7 @@ make m="update some table" makemigrations
 ## Utilizando o alembic no ambiente de desenvolvimento
 
 ```sh
+docker exec -it esus_dashboard_api bash
 flask db init --multidb
 flask db migrate -m "Initial migration"
 flask db upgrade
@@ -55,9 +56,21 @@ flask db upgrade
 
 O banco de dados, na versão `4.2.8` em que essa documentação foi escrita continha 919 tabelas com relacionamentos abundantes e aparente repetição de dados. Não existe uma documentação do banco, porém segue algumas dicas que uso para poder navegar.
 
+### Reiniciando nginx após alterar arquivo de conf
+
+```sh
+docker exec esus_dashboard_api nginx -s reload
+```
+
 ### [ Recomendável ] Criando usuário read-only 
 
 Para que seja impossível por meio dessa API editar os dados por acidente, permitindo apenas a leitura por parte da API.
+
+**Atualização** Após entrar em contato com a equipe de suporte do Laboratório Bridge /CTC / UFSC, recebi a seguinte informação de Wagner J. Nascimento:
+
+> Na criação do banco de dados é criado um usuário para leitura sim, mas só é possível ter acesso a essa informação na máquina onde o servidor do PEC está instalado. 
+Acessando a pasta webserver > config do PEC há um arquivo com o nome "credenciais" onde são exibidas as informações (usuário e senha) do usuário com acesso completo ao banco e do usuário com acesso de leitura.  
+
 
 ```sql
 -- Criando Role (Função)
